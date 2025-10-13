@@ -1,18 +1,18 @@
-# GoblinRun
+## GoblinRun
 
-# Plugins
-OpenXr  
-Unity OpenXr Meta  
-Xr Interaction Toolkit  
-Meta Xr Core SDK (from asset store)  
-WebRTC (see below)  
-MetaXR Simulator (for emulating camera passthrough emulation for now)  
+# Plugins  
+OpenXr<br>
+Unity OpenXr Meta<br>
+Xr Interaction Toolkit<br>
+Meta Xr Core SDK (from asset store)<br>
+WebRTC (see below)<br>
+MetaXR Simulator (for emulating camera passthrough emulation for now)<br>
 
-For WebRTC open ProjectDirectory/Packages/manifest.json  
-Add this line:  "com.unity.webrtc": "3.0.0-pre.8",  
-Then in unity open the package manager and search for WebRTC in the unity registry and click upgrade to 3.0.0-pre.8 (if present)  
-This will add the pre-release of the WebRTC package to the project  
+For WebRTC open `ProjectDirectory/Packages/manifest.json`<br>
+Add this line: `"com.unity.webrtc": "3.0.0-exp.6"`<br>
+Then in Unity open the Package Manager and search for WebRTC in the Unity Registry and click upgrade to `3.0.0-pre.8`<br>
+This will add the pre-release of the WebRTC package to the project <br>
 
 # Inital setup
-https://developers.meta.com/horizon/documentation/unity/unity-project-setup  
-https://developers.meta.com/horizon/documentation/unity/unity-tutorial-hello-vr  
+https://developers.meta.com/horizon/documentation/unity/unity-project-setup <br>
+https://developers.meta.com/horizon/documentation/unity/unity-tutorial-hello-vr <br>  
