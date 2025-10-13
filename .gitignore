@@ -87,3 +87,8 @@ mono_crash.*
 # Unity assets & metadata (optional: comment out if you want to version control all .meta/.asset files)
 *.asset
 *.meta
+
+# Unity samples
+# Ignore Unity package samples (like XR Toolkit)
+VR-App/Goblin Run/Assets/Samples/
+VR-App/Goblin Run/Assets/Plugins/
