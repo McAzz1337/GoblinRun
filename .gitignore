@@ -87,3 +87,5 @@ mono_crash.*
 # Unity assets & metadata (optional: comment out if you want to version control all .meta/.asset files)
 *.asset
 *.meta
+
+*.DS_Store
