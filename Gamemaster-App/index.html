@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game Master - Unity WebRTC Stream</title>
+</head>
+<body>
+  <h2>Game Master Video Stream</h2>
+  <video id="remoteVideo" autoplay playsinline width="800"></video>
+
+  <script>
+    const videoElement = document.getElementById('remoteVideo');
+    const pc = new RTCPeerConnection();
+    const signalingSocket = new WebSocket('ws://localhost:8080'); // Signaling server address
+
+    pc.ontrack = (event) => {
+      videoElement.srcObject = event.streams[0];
+      console.log('Received video track');
+    };
+
+    // Send ICE candidates back
+    pc.onicecandidate = (event) => {
+      if (event.candidate) {
+        signalingSocket.send(JSON.stringify({
+          type: 'candidate',
+          candidate: event.candidate
+        }));
+      }
+    };
+
+    signalingSocket.onmessage = async (event) => {
+      const msg = JSON.parse(event.data);
+
+      if (msg.type === 'offer') {
+        console.log('Received offer');
+        await pc.setRemoteDescription({ type: 'offer', sdp: msg.sdp });
+
+        const answer = await pc.createAnswer();
+        await pc.setLocalDescription(answer);
+
+        signalingSocket.send(JSON.stringify({
+          type: 'answer',
+          sdp: answer.sdp
+        }));
+
+        console.log('Sent answer');
+      } 
+      else if (msg.type === 'candidate') {
+        console.log('Received ICE candidate');
+        await pc.addIceCandidate(msg.candidate);
+      }
+    };
+  </script>
+</body>
+</html>
