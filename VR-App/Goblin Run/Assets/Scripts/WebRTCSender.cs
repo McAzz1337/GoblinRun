@@ -56,6 +56,7 @@ public class WebRTCSender : MonoBehaviour
     };
 
     passthroughLayer.enabled = true;
+    yield return new  WaitForSeconds(2);
     videoTrack = cam.rightEyeCamera.CaptureStreamTrack(streamWidth, streamHeight);
     peerConnection.AddTrack(videoTrack);
 
