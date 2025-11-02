@@ -12,8 +12,12 @@
   <script>
     const videoElement = document.getElementById('remoteVideo');
     const pc = new RTCPeerConnection();
-    const signalingSocket = new WebSocket('ws://localhost:8080'); // Signaling server address
-
+const signalingSocket = new WebSocket('ws://192.168.137.1:8080');
+    
+  signalingSocket.onopen = () => {
+    console.log("Connected to signaling server");
+    signalingSocket.send(JSON.stringify({ role: "browser" })); // 👈 tell Node who we are
+  };
     pc.ontrack = (event) => {
       videoElement.srcObject = event.streams[0];
       console.log('Received video track');

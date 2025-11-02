@@ -7,6 +7,8 @@ using System.Threading.Tasks;
 using System.Collections;
 using System;
 
+public class RoleMessage { public string role; }
+
 public class WebRTCSender : MonoBehaviour
 {
   [Header("Camera and Stream dimensions")]
@@ -56,7 +58,7 @@ public class WebRTCSender : MonoBehaviour
     };
 
     passthroughLayer.enabled = true;
-    yield return new  WaitForSeconds(2);
+    yield return new WaitForSeconds(2);
     videoTrack = cam.rightEyeCamera.CaptureStreamTrack(streamWidth, streamHeight);
     peerConnection.AddTrack(videoTrack);
 
@@ -67,7 +69,11 @@ public class WebRTCSender : MonoBehaviour
     var setLocalOp = peerConnection.SetLocalDescription(ref desc);
     yield return setLocalOp;
 
-    string sdpJson = JsonUtility.ToJson(new { type = "offer", sdp = desc.sdp });
+    //string sdpJson = JsonUtility.ToJson(new { type = "offer", sdp = desc.sdp });
+    //_ = SendStringAsync(sdpJson);
+    var message = new RoleMessage { role = "unity" };
+    string sdpJson = JsonUtility.ToJson(message);
+    Debug.Log($"sdpJson: {sdpJson}");
     _ = SendStringAsync(sdpJson);
 
     Debug.Log("Offer sent to signaling server");
@@ -78,25 +84,43 @@ public class WebRTCSender : MonoBehaviour
   private IEnumerator ConnectWebSocket()
   {
     webSocket = new ClientWebSocket();
-    Uri uri = new Uri("ws://localhost:8080");
+    Uri uri = new Uri("ws://192.168.137.1:8080");
 
-    Debug.Log("Connecting to signaling server...");
+    Debug.Log($"🔌 Attempting connection to {uri} ...");
+
     var connectTask = webSocket.ConnectAsync(uri, CancellationToken.None);
-    while (!connectTask.IsCompleted) yield return null;
+    while (!connectTask.IsCompleted)
+    {
+      yield return null;
+    }
+
+    if (connectTask.IsFaulted)
+    {
+      Debug.LogError($"WebSocket connect error: {connectTask.Exception?.InnerException?.Message}");
+      yield break;
+    }
+
+    if (connectTask.IsCanceled)
+    {
+      Debug.LogError("WebSocket connect canceled");
+      yield break;
+    }
+
+    Debug.Log($"WebSocket state after connect: {webSocket.State}");
 
     if (webSocket.State == WebSocketState.Open)
     {
       Debug.Log("Connected to signaling server!");
-
-      // Identify as Unity peer
       string hello = JsonUtility.ToJson(new { role = "unity" });
       _ = SendStringAsync(hello);
+      Debug.Log("Sent hello (role=unity)");
     }
     else
     {
-      Debug.LogError("Failed to connect to signaling server.");
+      Debug.LogError($"pFailed to connect to signaling server. State: {webSocket.State}");
     }
   }
+
 
   private async Task SendStringAsync(string message)
   {

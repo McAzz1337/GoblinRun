@@ -1,25 +1,33 @@
-// server.js
 const WebSocket = require('ws');
 const { WebSocketServer } = WebSocket;
 
-const wss = new WebSocketServer({ port: 8080 });
+const wss = new WebSocketServer({ host: '0.0.0.0', port: 8080 });
+
 let unitySocket = null;
 let browserSocket = null;
 
+const green = '\x1b[32m%s\x1b[0m';
+const blue = '\x1b[34m%s\x1b[0m';
+const yellow = '\x1b[33m%s\x1b[0m';
+
 wss.on('connection', ws => {
+  console.log(yellow, 'New connection received...');
+
   ws.on('message', message => {
+    console.log(yellow, 'Message received:', message.toString()); // log raw message
     const msg = JSON.parse(message);
 
-    // Identify who is who
     if (msg.role === 'unity') {
       unitySocket = ws;
-      console.log('Unity connected');
-    } else if (msg.role === 'browser') {
+      console.log(green, '✅ Unity connected');
+      return;
+    }
+    if (msg.role === 'browser') {
       browserSocket = ws;
-      console.log('Browser connected');
+      console.log(blue, '🌐 Browser connected');
+      return;
     }
 
-    // Forward messages between Unity and Browser
     if (unitySocket && browserSocket) {
       if (ws === unitySocket && browserSocket.readyState === WebSocket.OPEN) {
         browserSocket.send(message);
@@ -32,7 +40,8 @@ wss.on('connection', ws => {
   ws.on('close', () => {
     if (ws === unitySocket) unitySocket = null;
     if (ws === browserSocket) browserSocket = null;
+    console.log(yellow, 'Connection closed');
   });
 });
 
-console.log('Signaling server running on ws://localhost:8080');
+console.log('Signaling server running on ws://192.168.137.1:8080');
