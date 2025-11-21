@@ -1,4 +1,9 @@
 
+Geo-App/vendor/
+Geo-App/premake5.exe
+Geo-App/src/models
+Geo-App/bin/
+Geo-App/bin-int/
 # Unity generated folders (root level)
 [Ll]ibrary/
 [Tt]emp/

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="io">
+      <UniqueIdentifier>{3D785900-2904-880B-92B2-880B7E5D880B}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="model_data">
+      <UniqueIdentifier>{6F87701B-5B3F-B268-C446-8BC4B01D4D59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="stb">
+      <UniqueIdentifier>{6EAB880B-DAB4-887C-6330-9F7CCF38947C}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="src\gldebug.h" />
+    <ClInclude Include="src\io\assetImporter.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\io\fileio.h">
+      <Filter>io</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model_data\material.h">
+      <Filter>model_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model_data\texture.h">
+      <Filter>model_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\model_data\vertex.h">
+      <Filter>model_data</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stb\stb_image.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+    <ClInclude Include="src\stb\stbi_image_write.h">
+      <Filter>stb</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="src\io\assetImporter.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\io\fileio.cpp">
+      <Filter>io</Filter>
+    </ClCompile>
+    <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\model_data\material.cpp">
+      <Filter>model_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model_data\texture.cpp">
+      <Filter>model_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\model_data\vertex.cpp">
+      <Filter>model_data</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stb\stb_image.c">
+      <Filter>stb</Filter>
+    </ClCompile>
+    <ClCompile Include="src\stb\stbi_image_write.c">
+      <Filter>stb</Filter>
+    </ClCompile>
+  </ItemGroup>
+</Project>
