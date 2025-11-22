@@ -4,6 +4,52 @@ Geo-App/premake5.exe
 Geo-App/src/models
 Geo-App/bin/
 Geo-App/bin-int/
+
+# Ignore 3D models
+Geo-App/GeoApp/models/
+Geo-App/GeoApp/models/*.obj
+Geo-App/GeoApp/models/*.mtl
+
+# Visual Studio
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+*.vcxproj.user
+*.vcxproj.filters
+*.ncb
+*.sdf
+*.opensdf
+*.VC.db
+*.VC.VC.opendb
+
+# Build directories
+x64/Debug/
+x64/Release/
+Debug/
+Release/
+build/
+bin/
+obj/
+
+# Temporary files
+*.log
+*.tlog/
+
+
+# Android Studio
+.gradle/
+.idea/
+build/
+local.properties
+*.iml
+
+# Kotlin / Gradle
+.gradle/
+build/
+captures/
+.externalNativeBuild/
+.cxx/
 # Unity generated folders (root level)
 [Ll]ibrary/
 [Tt]emp/
