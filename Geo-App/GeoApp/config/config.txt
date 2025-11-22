@@ -1,0 +1,5 @@
+map res.obj
+xmin 663490
+xmax 665501
+ymin 213354
+ymax 214447
