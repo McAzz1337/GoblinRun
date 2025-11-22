@@ -62,6 +62,7 @@ project "GeoApp"
         "glfw3",
         "opengl32.lib",
         "assimp-vc143-mtd.lib",
+        "Ws2_32.lib",
     }
 
     filter "system:windows"
