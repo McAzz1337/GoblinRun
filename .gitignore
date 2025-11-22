@@ -4,6 +4,7 @@ Geo-App/premake5.exe
 Geo-App/src/models
 Geo-App/bin/
 Geo-App/bin-int/
+Geo-App/GeoApp/GeoApp.vcxproj
 
 # Ignore 3D models
 Geo-App/GeoApp/models/
