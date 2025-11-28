@@ -346,7 +346,7 @@ AudioSource:
   serializedVersion: 4
   OutputAudioMixerGroup: {fileID: 0}
   m_audioClip: {fileID: 0}
-  m_Resource: {fileID: 8300000, guid: 635749f5f11684eeab22dac183fb2397, type: 3}
+  m_Resource: {fileID: 8300000, guid: 98cd83a8658644ce1803b9a936a34b3f, type: 3}
   m_PlayOnAwake: 1
   m_Volume: 1
   m_Pitch: 1
@@ -458,7 +458,7 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: e8e39564b7920413f985c9b45af5fe34, type: 2}
+  - {fileID: 2100000, guid: f702b92b1606141469f03340152c7483, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -5387,16 +5387,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 205024364}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fc66743aabedc4496a11c6b0e138efbc, type: 3}
+  m_Script: {fileID: 11500000, guid: 1bbc07604393c4a9883bdf1272d1d40b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GoblinSpawner
   playerRig: {fileID: 1631442744}
   playerHead: {fileID: 1887251186}
-  goblinPrefab: {fileID: 1721234425185950523, guid: 27459e1d80abd4327b9b7f9000d2f12d, type: 3}
-  heraldPrefab: {fileID: 1721234425185950523, guid: 60a2e2e5ef8284c47bdc34ed0240331a, type: 3}
-  numberOfGoblins: 10
-  minDistance: 1
-  maxDistance: 3
+  goblinPrefab: {fileID: 1721234425185950523, guid: ec76f4d93b18d45f8b762a9ae4b3fd71, type: 3}
+  heraldPrefab: {fileID: 1721234425185950523, guid: c524796c0d4b047d6b38cbdbbb4b7b07, type: 3}
+  numberOfGoblins: 3
+  minDistance: 2
+  maxDistance: 5
   groundHeightOffset: 0
   heraldWaveCount: 3
   heraldWaveMinDistance: 7
@@ -6133,7 +6133,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 610756320}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4dd2a64842c8242fbb40229e97d8e517, type: 3}
+  m_Script: {fileID: 11500000, guid: f1cf644bd6df04bb390c2f30ce366ce5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::ScreenBlocker
   blackoutPanel: {fileID: 610756320}
@@ -6708,8 +6708,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 94ff0bd5469d94c5b8427ef53c493627, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SwordDamage
-  damagePerHit: 1
-  hitCooldown: 0.2
 --- !u!65 &897227264
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -6852,7 +6850,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 1083669174}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 33dd099f8ed654f9c9416a8f0887b272, type: 3}
+  m_Script: {fileID: 11500000, guid: 1ee78c6f816eb435fb74e6b6f2dd74dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::WeatherController
   rainFX: {fileID: 121819927}
@@ -6861,7 +6859,7 @@ MonoBehaviour:
   clearFogColor: {r: 0.7, g: 0.8, b: 0.9, a: 1}
   clearFogDensity: 0
   rainFogColor: {r: 0.45, g: 0.45, b: 0.5, a: 1}
-  rainFogDensity: 0.2
+  rainFogDensity: 0.02
   clearLightIntensity: 1.2
   rainLightIntensity: 0.6
 --- !u!1 &1086273698
@@ -7404,10 +7402,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1548437919}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 0ce25a53e4a64476c905d0fcebbdf90f, type: 3}
+  m_Script: {fileID: 11500000, guid: 4779f3802275e48f288ec910a9b84d1e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStarter
-  spawner: {fileID: 205024366}
+  spawner: {fileID: 0}
   autoSpawnOnStart: 0
 --- !u!4 &1548437921
 Transform:
@@ -7433,13 +7431,13 @@ MonoBehaviour:
   m_GameObject: {fileID: 1548437919}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6536722bf02ce4a30b0530cac521dd9f, type: 3}
+  m_Script: {fileID: 11500000, guid: 5e807007d7d0b4b67b46bbe676034a9d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameDirector
   goblinSpawner: {fileID: 205024366}
   weatherController: {fileID: 1083669176}
   screenBlocker: {fileID: 610756324}
-  trapManager: {fileID: 1548437924}
+  trapManager: {fileID: 0}
 --- !u!114 &1548437923
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -7449,14 +7447,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 1548437919}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: edde6efda629e4802aef466ea72931bd, type: 3}
+  m_Script: {fileID: 11500000, guid: c2c62b424f938433893fcb0f01b3b1c0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::HMDWebSocketClient
   serverHost: wipro.lab.sabertooth.dev
   serverPort: 443
+  useHttpsProxy: 1
+  proxyHost: wipro.lab.sabertooth.dev
   enemySpawner: {fileID: 205024366}
-  weatherController: {fileID: 1083669176}
-  screenBlocker: {fileID: 610756324}
+  weatherController: {fileID: 0}
+  screenBlocker: {fileID: 0}
   sendStatus: 1
   statusIntervalSeconds: 1
   activeGoblinsManual: 0
@@ -7471,11 +7471,10 @@ MonoBehaviour:
   m_GameObject: {fileID: 1548437919}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d50cc29b8b33475d965364c22cee6f1, type: 3}
+  m_Script: {fileID: 11500000, guid: 8d78e6cb30a2849588d95f13016d239f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::TrapManager
-  traps:
-  - {fileID: 0}
+  traps: []
 --- !u!1 &1564259569
 GameObject:
   m_ObjectHideFlags: 0
@@ -7972,7 +7971,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: b288b541ecae24fd493a42f6723295fa, type: 2}
+  - {fileID: 2100000, guid: b0a142cf562cf46cfb57600e6adec419, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -8120,7 +8119,7 @@ Camera:
   m_Depth: 0
   m_CullingMask:
     serializedVersion: 2
-    m_Bits: 55
+    m_Bits: 4294967295
   m_RenderingPath: -1
   m_TargetTexture: {fileID: 0}
   m_TargetDisplay: 0
@@ -8216,12 +8215,12 @@ MonoBehaviour:
   m_GameObject: {fileID: 1887251185}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4d0049a58979f410f8d4cc5617f19d90, type: 3}
+  m_Script: {fileID: 11500000, guid: a56eb54a154fb4059a94bf9a8352d3e2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerHealth
   maxHealth: 100
   regenRate: 5
-  regenDelay: 8
+  regenDelay: 3
   healthFill: {fileID: 1500546751}
   healthText: {fileID: 297937135}
 --- !u!1 &1919688975
