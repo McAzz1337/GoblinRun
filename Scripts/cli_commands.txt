@@ -1,0 +1,3 @@
+ awk -f "dhm2objawk.sec" "dhm25_grid_raster.asc" > emmen.obj
+
+C:\Users\marcf\Anaconda3\python.exe map_image.py

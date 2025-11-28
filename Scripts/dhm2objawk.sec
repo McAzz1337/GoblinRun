@@ -1,0 +1,130 @@
+BEGIN \
+{
+    # Koordinaten: CH1903 / LV03
+
+    # Eiger, Moench und Jungfrau
+    # xmin = 638000; xmax = 646000; ymin = 152000; ymax = 161000
+
+    # Lago Maggiore
+    # xmin = 690000; xmax = 742000; ymin = 74000; ymax = 122000
+
+    # Bodensee
+    # xmin = 707000; xmax = 778000; ymin = 261000; ymax = 290000
+
+    # Matterhorn
+    # xmin = 614000; xmax = 620000; ymin = 89000; ymax = 95000
+
+    # Walensee
+    # xmin = 723000; xmax = 744000; ymin = 218000; ymax = 225000
+
+    # Alpstein
+    # xmin = 741000; xmax = 757000; ymin = 231000; ymax = 241000
+
+    # Vierwaldstaettersee
+    # xmin = 662000; xmax = 691000; ymin = 193000; ymax = 216000
+
+    # Mythen
+    # xmin = 694000; xmax = 696000; ymin = 208000; ymax = 212000
+
+	# Emmenbrücke
+	# xmin = 663490; xmax = 665501; ymin = 213354; ymax = 214447
+	
+
+	# Domat/Ems ems3
+	xmin = 751486; xmax = 754990; ymin = 188042; ymax = 190007
+
+	# Rotkreuz
+	# xmin = 674319; xmax = 676465; ymin = 221232; ymax = 223002
+
+    zmin =  10000
+    zmax = -10000
+
+    row = 0
+    col = 0
+}
+
+tolower ($1) == "ncols"        { cols = $2; next }
+tolower ($1) == "nrows"        { rows = $2; next }
+tolower ($1) == "xllcorner"    { x0   = $2; next }
+tolower ($1) == "yllcorner"    { y0   = $2; next }
+tolower ($1) == "cellsize"     { cell = $2; next }
+tolower ($1) == "nodata_value" { nan  = $2; next }
+
+NR == 7 \
+{
+    col = 0
+    colmin = (xmin - x0) / cell
+    colmax = (xmax - x0) / cell
+
+    row = rows - 1
+    rowmin = (ymin - y0) / cell
+    rowmax = (ymax - y0) / cell
+}
+
+{
+    for (f = 1; f <= NF; ++f)
+    {
+        if (rowmin <= row) if (row <= rowmax)
+        if (colmin <= col) if (col <= colmax)
+        {
+            z = $f
+            if (z != nan)
+            {
+                if (z < zmin) zmin = z
+                if (z > zmax) zmax = z
+                tab [row, col] = z
+            }
+        }
+
+        if (++col >= cols)
+        {
+            col = 0
+            --row
+        }
+    }
+}
+
+END \
+{
+    xhalf = (xmin + xmax) / 2; xdelta = (xmax - xmin) / 2
+    yhalf = (ymin + ymax) / 2; ydelta = (ymax - ymin) / 2
+    zhalf = (zmin + zmax) / 2; zdelta = (zmax - zmin) / 2
+
+    delta = xdelta
+    if (ydelta > delta) delta = ydelta
+    if (zdelta > delta) delta = zdelta
+
+    count = 0
+    for (iter in tab)
+    {
+        split (iter, idxs, SUBSEP)
+        i = idxs [1]
+        k = idxs [2]
+
+        x = x0 + k * cell
+        y = y0 + i * cell
+        z = tab [i, k]
+
+        print "v" \
+            , (x - xhalf) / delta \
+            , (y - yhalf) / delta \
+            , (z - zhalf) / delta
+
+        tab [i, k] = ++count
+    }
+
+    for (iter in tab)
+    {
+        split (iter, idxs, SUBSEP)
+        i = idxs [1]
+        k = idxs [2]
+
+        a = tab [i    , k    ]
+        b = tab [i    , k + 1]
+        c = tab [i + 1, k + 1]
+        d = tab [i + 1, k    ]
+
+        if (a * b * c * d > 0)
+            print "f", a, b, c, d
+    }
+}
