@@ -1,0 +1,148 @@
+using UnityEngine;
+
+public class GoblinSpawner : MonoBehaviour
+{
+    [Header("References")]
+    [Tooltip("Root deines XR/OVR Camera Rigs (meist das Objekt mit OVRManager).")]
+    public Transform playerRig;
+
+    [Tooltip("Das echte Headset / CenterEyeAnchor. Wenn gesetzt, folgen Goblins dir wirklich.")]
+    public Transform playerHead;
+
+    [Tooltip("Prefab des Gegners, muss GoblinChase (und evtl. GoblinHealth) drauf haben.")]
+    public GameObject goblinPrefab;
+
+    [Header("Spawn Settings")]
+    [Tooltip("Wieviele Goblins pro Welle gespawnt werden.")]
+    public int numberOfGoblins = 3;
+
+    [Tooltip("Minimale Entfernung vor dem Spieler.")]
+    public float minDistance = 2f;
+
+    [Tooltip("Maximale Entfernung vor dem Spieler.")]
+    public float maxDistance = 5f;
+
+    [Tooltip("Offset nach oben, falls Goblins im echten Boden stecken. 0 bis 0.05 ist meist gut.")]
+    public float groundHeightOffset = 0f;
+
+    /*
+    void Start()
+    {
+        // leer
+    }
+
+    public void StartGame()
+    {
+        SpawnWave();
+    }
+
+    public void SpawnWave()
+    {
+        for (int i = 0; i < numberOfGoblins; i++)
+        {
+            SpawnOneGoblin();
+        }
+    }
+    */
+
+    public void SpawnOneGoblin()
+    {
+        // zufällig im Bereich vor dem Spieler
+        float angleDeg = Random.Range(-40f, 40f);
+        SpawnGoblinAtAngle(angleDeg);
+    }
+
+    /// <summary>
+    /// Wird vom HMDWebSocketClient für Kommandos wie
+    /// type goblin, position FRONT LEFT RIGHT aufgerufen.
+    /// </summary>
+    public void SpawnFromCommand(string enemyType, string position)
+    {
+        Debug.Log($"SpawnFromCommand enemyType={enemyType}, position={position}");
+
+        if (string.IsNullOrEmpty(enemyType) || enemyType.ToLowerInvariant() != "goblin")
+        {
+            Debug.LogWarning($"GoblinSpawner SpawnFromCommand unbekannter enemyType {enemyType}");
+            return;
+        }
+
+        if (string.IsNullOrEmpty(position))
+        {
+            // Fallback auf normalen Zufallsspawn
+            SpawnOneGoblin();
+            return;
+        }
+
+        position = position.ToUpperInvariant();
+
+        float angleDeg;
+        switch (position)
+        {
+            case "FRONT":
+                angleDeg = 0f;
+                break;
+            case "LEFT":
+                angleDeg = -60f;
+                break;
+            case "RIGHT":
+                angleDeg = 60f;
+                break;
+            case "BACK":
+                angleDeg = 180f;
+                break;
+            default:
+                Debug.LogWarning($"GoblinSpawner SpawnFromCommand unbekannte position {position}");
+                SpawnOneGoblin();
+                return;
+        }
+
+        SpawnGoblinAtAngle(angleDeg);
+    }
+
+    /// <summary>
+    /// Kern Logik für das eigentliche Spawnen an einem bestimmten Winkel relativ zur Blickrichtung.
+    /// </summary>
+    void SpawnGoblinAtAngle(float angleDeg)
+    {
+        if (playerRig == null)
+        {
+            Debug.LogWarning("[GoblinSpawner] playerRig ist nicht gesetzt");
+            return;
+        }
+
+        Vector3 origin = playerRig.position;
+        origin.y = 0f;
+
+        Vector3 fwd = playerRig.forward;
+        fwd.y = 0f;
+        fwd.Normalize();
+
+        Vector3 dir = Quaternion.Euler(0f, angleDeg, 0f) * fwd;
+
+        float dist = Random.Range(minDistance, maxDistance);
+
+        Vector3 spawnPos = origin + dir * dist;
+        spawnPos.y = groundHeightOffset;
+
+        Quaternion lookRot = Quaternion.LookRotation((origin - spawnPos).normalized, Vector3.up);
+
+        GameObject goblin = Instantiate(goblinPrefab, spawnPos, lookRot);
+
+        Transform chaseTarget = playerHead != null ? playerHead : playerRig;
+
+        GoblinChase chase = goblin.GetComponent<GoblinChase>();
+        if (chase != null && chaseTarget != null)
+        {
+            chase.SetTarget(chaseTarget);
+        }
+
+        GoblinHealth hp = goblin.GetComponent<GoblinHealth>();
+        if (hp != null && chaseTarget != null)
+        {
+            hp.SetPlayerTarget(chaseTarget);
+        }
+
+        Debug.Log($"GoblinSpawner hat Goblin bei angle {angleDeg} gespawnt position {spawnPos}");
+    }
+
+}

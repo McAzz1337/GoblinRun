@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Goblin Run Control Panel</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      padding: 16px;
+      background: #111;
+      color: #eee;
+    }
+    h1 {
+      margin-top: 0;
+    }
+    .grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 16px;
+      align-items: start;
+    }
+    .card {
+      background: #1e1e1e;
+      padding: 16px;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.5);
+    }
+    button {
+      padding: 8px 12px;
+      margin: 4px;
+      border-radius: 4px;
+      border: none;
+      cursor: pointer;
+    }
+    button:disabled {
+      opacity: 0.5;
+      cursor: default;
+    }
+    #status {
+      font-size: 0.9rem;
+      opacity: 0.8;
+    }
+    #log {
+      font-family: monospace;
+      font-size: 0.8rem;
+      max-height: 200px;
+      overflow-y: auto;
+      background: #000;
+      padding: 8px;
+      border-radius: 4px;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Goblin Run Control Panel</h1>
+  <div id="status">Verbinde mit Server …</div>
+
+  <div class="grid">
+    <div class="card">
+      <h2>Events</h2>
+
+      <h3>Enemies</h3>
+      <div>
+        <button id="spawnGoblinFront">Goblin vorne</button>
+        <button id="spawnGoblinLeft">Goblin links</button>
+        <button id="spawnGoblinRight">Goblin rechts</button>
+      </div>
+      
+      <h4>Herald</h4>
+        <div>
+        <button id="spawnHeraldFront">Herald vorne</button>
+        </div>
+
+      <h3>Environment</h3>
+      <div>
+        <button id="weatherClear">Wetter klar</button>
+        <button id="weatherRain">Wetter Regen</button>
+      </div>
+
+      <h3>Screen control</h3>
+      <div>
+        <button id="screenBlockOn">Screen block ON</button>
+        <button id="screenBlockOff">Screen block OFF</button>
+      </div>
+
+      <h3>Traps</h3>
+        <div>
+        <button id="trapSpikeFront">Spike front</button>
+        <button id="trapSpikeLeft">Spike links</button>
+        <button id="trapSpikeRight">Spike rechts</button>
+        </div>
+
+
+      <h3>Debug</h3>
+      <div>
+        <button id="sendPing">Ping</button>
+      </div>
+
+      <h3>Headset Status</h3>
+      <div id="statusHealth">Health: ?</div>
+      <div id="statusGoblins">Active Goblins: ?</div>
+      <div id="statusScreen">Screen block: ?</div>
+
+      <h3>Log</h3>
+      <div id="log"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>

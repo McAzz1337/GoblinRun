@@ -1,0 +1,67 @@
+# === Geo-App ===
+Geo-App/vendor/
+Geo-App/premake5.exe
+Geo-App/bin/
+Geo-App/bin-int/
+Geo-App/GeoApp/models/
+Geo-App/x64/Debug/
+Geo-App/*.pdb
+Geo-App/*.obj
+Geo-App/*.mtl
+
+# Visual Studio generated files
+*.sln
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.suo
+*.user
+*.userosscache
+*.VC.db
+*.ncb
+*.opensdf
+*.sdf
+*.VC.VC.opendb
+*.tmp
+*.log
+*.pidb
+*.pdb
+*.mdb
+*.opendb
+*.booproj
+*.svd
+
+# Visual Studio folders
+.vs/
+Debug/
+Release/
+bin/
+obj/
+
+# === GPS-Sender-App ===
+GPS-Sender-App/build/
+GPS-Sender-App/app/build/
+GPS-Sender-App/.gradle/
+GPS-Sender-App/app/.gradle/
+GPS-Sender-App/app/.cxx/
+GPS-Sender-App/local.properties
+GPS-Sender-App/.idea/
+GPS-Sender-App/**/*.iml
+GPS-Sender-App/**/*.apk
+GPS-Sender-App/**/*.aab
+
+# Allgemein
+*.log
+.DS_Store
+
+# === Unity Projekt Goblin Run ===
+VR-App/Goblin Run/Library/
+VR-App/Goblin Run/Logs/
+VR-App/Goblin Run/Temp/
+VR-App/Goblin Run/Obj/
+VR-App/Goblin Run/Build/
+VR-App/Goblin Run/Builds/
+VR-App/Goblin Run/*.csproj
+VR-App/Goblin Run/*.unityproj
+VR-App/Goblin Run/*.sln
+VR-App/Goblin Run/*.userprefs
