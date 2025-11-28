@@ -60,7 +60,6 @@ public:
 	void addUniformF2(std::string name, glm::vec2 uniform);
 
 	void bind(const glm::mat4& projectionView) const;
-	void assignAssets(std::unordered_map<assetimporter::AssetType, std::string> assets);
 	void assignTex(Texture tex);
 	void assignShader(Shader shader);
 

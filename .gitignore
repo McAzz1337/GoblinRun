@@ -4,6 +4,7 @@ Geo-App/premake5.exe
 Geo-App/bin/
 Geo-App/bin-int/
 Geo-App/GeoApp/models/
+Geo-App/GeoApp/textures/
 Geo-App/x64/Debug/
 Geo-App/*.pdb
 Geo-App/*.obj

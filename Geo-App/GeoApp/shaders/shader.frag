@@ -1,10 +1,11 @@
 #version 410 core
 
-in float f_y;
+in vec2 f_uv;
 in vec3 f_norm;
 in vec4 fragPos;
 out vec4 color;
 
+uniform sampler2D tex;
 uniform vec3 cameraPos;
 
 vec3 red = vec3(1.0, 0.0, 0.0);
@@ -24,16 +25,7 @@ void main() {
 		color = vec4(red * (ambient + diff), 1.0);
 	} else {
 
-		vec3 c;
-		if (f_y <= 0.0) {
-			c = blue;
-		} else if (f_y < 0.8) {
-			c = green;
-		} else {
-			c = white;
-		}
-
-
-		color = vec4(vec3(0.7) * (ambient + diff), 1.0);
+		vec3 c = texture(tex, f_uv).xyz;
+		color = vec4(c * (ambient + diff), 1.0);
 	}
 }

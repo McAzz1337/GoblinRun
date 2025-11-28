@@ -1,0 +1,5 @@
+map rotkreuz.obj
+xmin 674319
+xmax 676465 
+ymin 221232
+ymax 223002

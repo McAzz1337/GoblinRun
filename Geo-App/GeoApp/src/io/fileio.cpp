@@ -14,8 +14,7 @@
 
 
 void readFile(const std::string& path, std::string& dst, bool log) {
-
-	std::ifstream in(path);
+	std::ifstream in( path);
 
 	if (!in.is_open()) {
 
