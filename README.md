@@ -40,11 +40,10 @@ Images will be downloaded from: "https://wms.geo.admin.ch/"
 
 # premake
 This will only work on Windows. It generates a Visual Studio Solution.
-Open the folder the premake.lua script is in and run: .\premake5.exe vs<XXXX> where XXXX is the version of Visual Studio used.
+Open the folder the premake.lua script is in in a terminal and run: .\premake5.exe vs<XXXX> where XXXX is the version of Visual Studio used.
 Run .\premake5.exe --help to see what versions of Visual Studio Solutions can be generated.
-When using MacOs or Linux you will have to pass the Libraries and Preprocessor defines used to the compiler (easiest done with a Makefile
-and ran by make).
-In the premake.lua script all the info about what dependencies the project uses are listed together with the preprocessor defines.
+When using MacOs or Linux you will have to pass the Libraries and Preprocessor defines used to the compiler via arguments(easiest done with a Makefile and ran by make).
+In the premake.lua script all the info about which dependencies the project uses are listed together with the preprocessor defines.
 
 # Geo-APP
 Create a new config file like the one in the config folder.
