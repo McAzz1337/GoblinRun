@@ -8,7 +8,7 @@ from PIL import Image
 from io import BytesIO
 
 # -----------------------------
-# 1️⃣ Enter your CH1903 bounds
+# Enter your CH1903 bounds
 # -----------------------------
 xmin = 751486
 xmax = 754990
@@ -23,7 +23,7 @@ ymin -= margin
 ymax += margin
 
 # -----------------------------
-# 2️⃣ Conversion CH1903 → WGS84
+# Conversion CH1903 → WGS84
 # -----------------------------
 def ch1903_to_wgs84(E, N):
     # formulas from https://geodesy.geo.admin.ch
@@ -54,7 +54,7 @@ sw_lat, sw_lon = ch1903_to_wgs84(xmin, ymin)
 ne_lat, ne_lon = ch1903_to_wgs84(xmax, ymax)
 
 # -----------------------------
-# 3️⃣ Download map image
+# Download map image
 # -----------------------------
 url = "https://wms.geo.admin.ch/"
 params = {
