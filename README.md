@@ -45,10 +45,13 @@ Run .\premake5.exe --help to see what versions of Visual Studio Solutions can be
 When using MacOs or Linux you will have to pass the Libraries and Preprocessor defines used to the compiler via arguments(easiest done with a Makefile and ran by make).
 In the premake.lua script all the info about which dependencies the project uses are listed together with the preprocessor defines.
 
+IMPORTANT!
+Before running the Geo-App once it is generated just build it without running. Now place the file named "assimp-vc143-mtd.dll" in the same folder where the generated binary of the application was placed. Without this dll the program will not run. However, when running this on MacOs this will not work as this is a Windows dll. You can probably download this dependency via brew with: brew install assimp.
+If this is not possible, then you can remove this dependency intirely and implement a .obj file parser very easily as .obj files are structured very simple and can be opened with a text editor and everything can be read as it is just utf-8 encoded text.
+
 # Geo-APP
 Create a new config file like the one in the config folder.
 The field image can be omitted. The application will just render the map model in gray when the image is not specified in the config.
-
 
 # GPS-Sender-App
 This is an Android app that just lets the user enter an IP address and when the start button is pressed it will start sending
