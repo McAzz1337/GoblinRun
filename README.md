@@ -21,6 +21,7 @@ https://developers.meta.com/horizon/documentation/unity/unity-tutorial-hello-vr 
 Note: 
 The CLI commands can be found in the directory: /Scripts/cli_commands.txt
 The whole vendor folder with the dependencies together with the models and texture forlders for the Geo-App was provided to the experts.
+Place these folders in the same folder the as the src folder which contains the source code.
 
 # dhm2objawk.sed
 Run this one on Linux, WSL or the Git Bash command line
