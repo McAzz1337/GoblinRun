@@ -4,7 +4,7 @@
 
 struct Config {
 	std::string mapfileName;
-	std::string textureFileName;
+	std::string textureFileName = "";
 	double xmin;
 	double xmax;
 	double ymin;

@@ -7,6 +7,7 @@ out vec4 color;
 
 uniform sampler2D tex;
 uniform vec3 cameraPos;
+uniform int useTexture;
 
 vec3 red = vec3(1.0, 0.0, 0.0);
 vec3 blue = vec3(0.0, 0.0, 1.0);
@@ -24,8 +25,12 @@ void main() {
 	if (isPin == 1) {
 		color = vec4(red * (ambient + diff), 1.0);
 	} else {
-
-		vec3 c = texture(tex, f_uv).xyz;
+		vec3 c;
+		if (useTexture == 1) {
+			 c = texture(tex, f_uv).xyz;
+		} else {
+			c = vec3(0.5);
+		}
 		color = vec4(c * (ambient + diff), 1.0);
 	}
 }

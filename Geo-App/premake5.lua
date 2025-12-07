@@ -74,7 +74,7 @@ project "GeoApp"
             "GLEW_STATIC",
             "GLM_FORCE_RADIANS",
             "_CRT_SECURE_NO_WARNINGS",
-            "_USE_MATCH_DEFINES"
+            "_USE_MATH_DEFINES"
         }
 
         filter "configurations:Debug"

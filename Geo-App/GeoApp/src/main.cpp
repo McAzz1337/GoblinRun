@@ -188,9 +188,12 @@ int main(int argc, const char** argv) {
 		}
 		VertexBuffer vbo(vertices.data(), vertices.size());
 		IndexBuffer ibo(indices.data(), indices.size());
-		Texture tex("textures/" + config.textureFileName);
 		Shader shader("shaders/shader");
-		mat.assignTex(tex);
+		if (!config.textureFileName.empty()) {
+			Texture tex("textures/" + config.textureFileName);
+			mat.assignTex(tex);
+			mat.addUniformI("useTexture", 1);
+		}
 		mat.assignShader(shader);
 		mesh.assignMaterial(mat);
 		mesh.assignBuffers(vbo, ibo);
