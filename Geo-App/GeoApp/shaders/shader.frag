@@ -19,18 +19,18 @@ vec3 lightPos = vec3(0.0, 2.0, 0.0);
 uniform int isPin;
 
 void main() {
-		vec3 lightDir = normalize(lightPos - fragPos.xyz);
-		float diff = max(dot(f_norm, lightDir), 0.0);
-		float ambient = 0.3;
+	vec3 lightDir = normalize(lightPos - fragPos.xyz);
+	float diff = max(dot(f_norm, lightDir), 0.0);
+	float ambient = 0.3;
+	vec3 c;
 	if (isPin == 1) {
-		color = vec4(red * (ambient + diff), 1.0);
+		c = red;
 	} else {
-		vec3 c;
 		if (useTexture == 1) {
 			 c = texture(tex, f_uv).xyz;
 		} else {
 			c = vec3(0.5);
 		}
-		color = vec4(c * (ambient + diff), 1.0);
 	}
+	color = vec4(c * (ambient + diff), 1.0);
 }

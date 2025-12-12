@@ -1,4 +1,5 @@
 map rotkreuz.obj
+image rotkreuz.png
 xmin 674319
 xmax 676465 
 ymin 221232
