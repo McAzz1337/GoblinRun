@@ -6864,11 +6864,11 @@ MonoBehaviour:
   clearFogStart: 0
   clearFogEnd: 300
   rainFogColor: {r: 0.45, g: 0.45, b: 0.5, a: 1}
-  rainFogDensity: 0.02
-  rainFogStart: 0
-  rainFogEnd: 50
+  rainFogDensity: 0.4
+  rainFogStart: 10
+  rainFogEnd: 80
   clearLightIntensity: 1.2
-  rainLightIntensity: 0.6
+  rainLightIntensity: 0.5
 --- !u!1 &1086273698
 GameObject:
   m_ObjectHideFlags: 0
