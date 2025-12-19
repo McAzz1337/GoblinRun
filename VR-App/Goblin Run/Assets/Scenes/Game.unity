@@ -6858,10 +6858,15 @@ MonoBehaviour:
   rainFX: {fileID: 121819927}
   rainAudio: {fileID: 121819929}
   mainLight: {fileID: 410087040}
+  fogMode: 3
   clearFogColor: {r: 0.7, g: 0.8, b: 0.9, a: 1}
   clearFogDensity: 0
+  clearFogStart: 0
+  clearFogEnd: 300
   rainFogColor: {r: 0.45, g: 0.45, b: 0.5, a: 1}
   rainFogDensity: 0.02
+  rainFogStart: 0
+  rainFogEnd: 50
   clearLightIntensity: 1.2
   rainLightIntensity: 0.6
 --- !u!1 &1086273698
