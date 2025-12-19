@@ -86,28 +86,6 @@ void Material::assignTex(Texture tex) {
 	this->tex = tex;
 }
 
-
-
-void Material::assignAssets(std::unordered_map<assetimporter::AssetType, std::string> textures) {
-	auto it = textures.find(assetimporter::AssetType::DIFFUSE0);
-	if (it != textures.end()) tex = Texture(it->second);
-	it = textures.find(assetimporter::AssetType::DIFFUSE1);
-	if (it != textures.end()) tex1 = Texture(it->second);
-	it = textures.find(assetimporter::AssetType::NORMAL_MAP);
-	if (it != textures.end()) normalMap = Texture(it->second);
-
-	it = textures.find(assetimporter::AssetType::SHADER);
-	if (it != textures.end()) {
-		shader = Shader(it->second);
-		shader.setUniformf1("tex1", 1);
-	}
-	it = textures.find(assetimporter::AssetType::BUMP_MAP);
-	if (it != textures.end()) {
-		bumpMap = Texture(it->second);
-		shader.setUniformi1("bump", 2);
-	}
-}
-
 void Material::assignShader(Shader shader) {
 	this->shader = shader;
 }

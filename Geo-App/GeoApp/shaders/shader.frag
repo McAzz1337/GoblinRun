@@ -1,11 +1,13 @@
 #version 410 core
 
-in float f_y;
+in vec2 f_uv;
 in vec3 f_norm;
 in vec4 fragPos;
 out vec4 color;
 
+uniform sampler2D tex;
 uniform vec3 cameraPos;
+uniform int useTexture;
 
 vec3 red = vec3(1.0, 0.0, 0.0);
 vec3 blue = vec3(0.0, 0.0, 1.0);
@@ -17,23 +19,18 @@ vec3 lightPos = vec3(0.0, 2.0, 0.0);
 uniform int isPin;
 
 void main() {
-		vec3 lightDir = normalize(lightPos - fragPos.xyz);
-		float diff = max(dot(f_norm, lightDir), 0.0);
-		float ambient = 0.3;
+	vec3 lightDir = normalize(lightPos - fragPos.xyz);
+	float diff = max(dot(f_norm, lightDir), 0.0);
+	float ambient = 0.3;
+	vec3 c;
 	if (isPin == 1) {
-		color = vec4(red * (ambient + diff), 1.0);
+		c = red;
 	} else {
-
-		vec3 c;
-		if (f_y <= 0.0) {
-			c = blue;
-		} else if (f_y < 0.8) {
-			c = green;
+		if (useTexture == 1) {
+			 c = texture(tex, f_uv).xyz;
 		} else {
-			c = white;
+			c = vec3(0.5);
 		}
-
-
-		color = vec4(vec3(0.7) * (ambient + diff), 1.0);
 	}
+	color = vec4(c * (ambient + diff), 1.0);
 }

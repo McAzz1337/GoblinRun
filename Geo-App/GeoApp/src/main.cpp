@@ -10,6 +10,10 @@
 #include "model_data/material.h"
 #include "model_data/buffer.h"
 #include "model_data/mesh.h"
+#include "model_data/texture.h"
+#include "model_data/util.h"
+#include "config.h"
+#include "coordinateConversion.h"
 #include "gldebug.h"
 #include "io/fileio.h"
 #include <winsock2.h>
@@ -22,6 +26,7 @@
 #include <chrono>
 #include <algorithm>
 #include <functional>
+#include <limits>
 
 std::mutex gpsMutex;
 float latestLat = 0.0f;
@@ -74,102 +79,6 @@ void startUDPReceiver(int port = 5005) {
 		}).detach();
 }
 
-void wgs84ToCH1903(double lat, double lon, double& E, double& N) {
-	double lat_sec = lat * 3600.0;
-	double lon_sec = lon * 3600.0;
-
-	double lat_aux = (lat_sec - 169028.66) / 10000.0;
-	double lon_aux = (lon_sec - 26782.5) / 10000.0;
-
-	E = 600072.37
-		+ 211455.93 * lon_aux
-		- 10938.51 * lon_aux * lat_aux
-		- 0.36 * lon_aux * lat_aux * lat_aux
-		- 44.54 * lon_aux * lon_aux * lon_aux;
-
-	N = 200147.07
-		+ 308807.95 * lat_aux
-		+ 3745.25 * lon_aux * lon_aux
-		+ 76.63 * lat_aux * lat_aux
-		- 194.56 * lon_aux * lon_aux * lat_aux
-		+ 119.79 * lat_aux * lat_aux * lat_aux;
-}
-
-// 2️⃣ Normalize CH1903 → OpenGL coordinates
-glm::vec2 ch1903ToGL(double E, double N,
-	double xmin, double xmax,
-	double ymin, double ymax) {
-	double xhalf = (xmin + xmax) / 2.0;
-	double yhalf = (ymin + ymax) / 2.0;
-	double xdelta = (xmax - xmin) / 2.0;
-	double ydelta = (ymax - ymin) / 2.0;
-
-	double delta = std::max<double>(xdelta, ydelta);
-
-	double x_gl = (E - xhalf) / delta;
-	double y_gl = (N - yhalf) / delta;
-
-	return glm::vec2(x_gl, y_gl);
-}
-// 3️⃣ Convenience: WGS84 → OpenGL vec3
-glm::vec3 wgs84ToGL(double lat, double lon,
-	double xmin, double xmax,
-	double ymin, double ymax,
-	double alt = 0.0f) {
-	double E, N;
-	wgs84ToCH1903(lat, lon, E, N);
-	double xhalf = (xmin + xmax) / 2.0;
-	double zhalf = (ymin + ymax) / 2.0;
-	double xdelta = (xmax - xmin) / 2.0;
-	double zdelta = (ymax - ymin) / 2.0;
-	double delta = std::max<double>(xdelta, zdelta);
-
-	float x_gl = (E - xhalf) / delta; // OpenGL X
-	float z_gl = (N - zhalf) / delta; // OpenGL Z
-	float y_gl = (float)alt;          // OpenGL Y (height)
-
-	return glm::vec3(x_gl, y_gl, z_gl);
-}
-
-struct Config {
-	std::string mapfileName;
-	double xmin;
-	double xmax;
-	double ymin;
-	double ymax;
-};
-
-Config readConfig() {
-	std::function<std::string(const std::string&)> getValue = [](const std::string& line) {
-		size_t i = line.find(" ");
-		if (i != std::string::npos) {
-			return line.substr(i + 1);
-		}
-		printf("Malformed config at line: %s\n", line.c_str());
-		exit(1);
-		};
-	std::vector<std::string> configValues;
-	readFileSplit("config/config.txt", configValues);
-	Config config;
-	for (auto& s : configValues) {
-		if (s.find("map") != std::string::npos) {
-			config.mapfileName = getValue(s);
-		}
-		else if (s.find("xmin") != std::string::npos) {
-			config.xmin = std::stod(getValue(s));
-		}
-		else if (s.find("xmax") != std::string::npos) {
-			config.xmax = std::stod(getValue(s));
-		}
-		else if (s.find("ymin") != std::string::npos) {
-			config.ymin = std::stod(getValue(s));
-		}
-		else if (s.find("ymax") != std::string::npos) {
-			config.ymax = std::stod(getValue(s));
-		}
-	}
-	return config;
-}
 
 
 glm::vec2 mouse;
@@ -214,7 +123,7 @@ int main(int argc, const char** argv) {
 		return 1;
 	}
 	startUDPReceiver(5005);
-
+#pragma region INIT_OPEN_GL
 	if (!glfwInit()) {
 		std::cout << "Failed to initialize GLFW" << std::endl;
 	}
@@ -238,35 +147,53 @@ int main(int argc, const char** argv) {
 	glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
 	glEnable(GL_DEPTH_TEST);
 	glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
+#pragma endregion
 
-	const Config config = readConfig();
+	const Config config;
+#if 0
 	printf("mapfile: %s\n", config.mapfileName.c_str());
+	printf("textureFile: %s\n", config.textureFileName.c_str());
 	printf("xmin: %f\n", config.xmin);
 	printf("xmax: %f\n", config.xmax);
 	printf("ymin: %f\n", config.ymin);
 	printf("ymax: %f\n", config.ymax);
+#endif
 
 	glm::mat4 model = glm::mat4(1.0f);
 	glm::mat4 projection = glm::perspective((float)std::numbers::pi * 0.3f, 1440.0f / 1080.0f, 0.01f, 100.0f);
 	
-	assetimporter::init();
+#pragma region INIT_MESHES
 	Mesh mesh;
 	{
 		std::vector<Vertex> vertices;
 		std::vector<uint32_t> indices;
 		Material mat;
-		assetimporter::loadModel("models", "emmen.obj", vertices, indices, mat);
+		assetimporter::loadModel("models", config.mapfileName, vertices, indices, mat);
 		{
 			glm::mat4 rot = glm::rotate(glm::mat4(1.0f), (float)std::numbers::pi * -0.5f, { 1.0f, 0.0f, 0.0f });
-			glm::mat3 r = glm::mat3(rot);
-			for (int i = 0; i < vertices.size(); i++) {
-				vertices[i].pos = glm::vec3(rot * glm::vec4(vertices[i].pos, 1.0f));
-				vertices[i].norm = r * vertices[i].norm;
+			MinMaxXY m = getMinMaxXY(vertices);
+			m.maxX += abs(m.minX);
+			m.maxY += abs(m.minY);
+			for (auto& v : vertices) {
+				v.pos = glm::vec3(rot * glm::vec4(v.pos, 1.0f));
+				glm::vec3 p = v.pos;
+				p.x += m.minX;
+				p.z += m.minY;
+				float r = p.x / m.maxX;
+				float t = p.z / m.maxY;
+				v.uv = glm::vec2(r,  1.0f - t);
+				v.pos.y *= 1.5f;
+				v.norm = r * v.norm;
 			}
 		}
 		VertexBuffer vbo(vertices.data(), vertices.size());
 		IndexBuffer ibo(indices.data(), indices.size());
 		Shader shader("shaders/shader");
+		if (!config.textureFileName.empty()) {
+			Texture tex("textures/" + config.textureFileName);
+			mat.assignTex(tex);
+			mat.addUniformI("useTexture", 1);
+		}
 		mat.assignShader(shader);
 		mesh.assignMaterial(mat);
 		mesh.assignBuffers(vbo, ibo);
@@ -287,18 +214,20 @@ int main(int argc, const char** argv) {
 		mat.addUniformF3("color", { 1.0f, 0.0f, 0.0f });
 		pin.assignMaterial(mat);
 	}
+#pragma endregion
 
 	std::chrono::time_point last = std::chrono::steady_clock::now();
 	float elapsed = 0.0f;
 
 
-	float rotationAngle = (float)std::numbers::pi * 0.01;
+	float pinAngle = 0.0f;
+	float pinRotationSpeed = (float)std::numbers::pi * 0.3f;
 
 	while (!glfwWindowShouldClose(window)) {
 		std::chrono::time_point now = std::chrono::steady_clock::now();
 		float delta = std::chrono::duration<float, std::milli>(now - last).count() / 1000.0f;
 		elapsed += delta;
-		delta /= 1000.0f;
+		last = now;
 
 
 		glfwPollEvents();
@@ -306,6 +235,7 @@ int main(int argc, const char** argv) {
 
 		updateCamera(); 
 
+#pragma region CONTROLS
 		glm::vec3 forward;
 		forward.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
 		forward.y = sin(glm::radians(pitch));
@@ -316,39 +246,27 @@ int main(int argc, const char** argv) {
 		if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS) {
 			glfwSetWindowShouldClose(window, 1);
 		} else if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS) {
-			//view = glm::translate(view, forward * delta);
 			camPos += forward * delta * speedModifier;
 		} else if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS) {
-			//view = glm::translate(view, -forward * delta);
 			camPos -= forward * delta * speedModifier;
 		} else if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS) {
-			//view = glm::translate(view, -right * delta);
 			camPos -= right * delta * speedModifier;
 		} else if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS) {
-			//view = glm::translate(view, right * delta);
 			camPos += right * delta * speedModifier;
-		}  else if (glfwGetKey(window, GLFW_KEY_LEFT) == GLFW_PRESS) {
-			model = glm::rotate(model, rotationAngle, glm::vec3(0.0, 1.0, 0.0f * delta));
-		} else if (glfwGetKey(window, GLFW_KEY_RIGHT) == GLFW_PRESS) {
-			model = glm::rotate(model, -rotationAngle, glm::vec3(0.0, 1.0, 0.0f * delta));
-		}
-		else if (glfwGetKey(window, GLFW_KEY_UP) == GLFW_PRESS) {
-			model = glm::rotate(model, rotationAngle, glm::vec3(1.0, 0.0, 0.0f * delta));
-		} 
-		else if (glfwGetKey(window, GLFW_KEY_DOWN) == GLFW_PRESS) {
-			model = glm::rotate(model, -rotationAngle, glm::vec3(1.0, 0.0, 0.0f * delta));
-		}
-		else if (glfwGetKey(window, GLFW_KEY_R) == GLFW_PRESS) {
-			view = glm::mat4(1.0f);
-		}
-		else if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+		} else if (glfwGetKey(window, GLFW_KEY_SPACE) == GLFW_PRESS) {
+			camPos += glm::vec3(0.0f, 1.0f, 0.0f) * delta * speedModifier;
+		} else if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_PRESS) {
+			camPos += glm::vec3(0.0f, -1.0f, 0.0f) * delta * speedModifier;
+		} else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_PRESS) {
 			speedModifier = 0.1f;
-		}
-		else if (glfwGetKey(window, GLFW_KEY_LEFT_CONTROL) == GLFW_RELEASE) {
+		} else if (glfwGetKey(window, GLFW_KEY_LEFT_SHIFT) == GLFW_RELEASE) {
 			speedModifier = 1.0f;
 		}
+#pragma endregion
+
 		updateCamera();
 
+#pragma region COORDINATES_AND_PIN
 		float lat, lon;
 		{
 			std::lock_guard<std::mutex> lock(gpsMutex);
@@ -357,9 +275,17 @@ int main(int argc, const char** argv) {
 		}
 
 		glm::vec3 pinPos = wgs84ToGL(lat, lon, config.xmin, config.xmax, config.ymin, config.ymax);
-		printf("pin: %f, %f, %f\n", pinPos.x, pinPos.y, pinPos.z);
-		pinModel = glm::translate(glm::mat4(1.0f), pinPos);
 
+#if 0 
+		printf("pin: %f, %f, %f\n", pinPos.x, pinPos.y, pinPos.z); 
+#endif
+		pinAngle += pinRotationSpeed * delta;
+		pinAngle = fmod(pinAngle, 2.0f * std::numbers::pi_v<float>);
+		pinModel = glm::translate(glm::mat4(1.0f), pinPos);
+		pinModel = glm::rotate(pinModel, pinAngle, {0.0f, 1.0f, 0.0f});
+#pragma endregion
+
+#pragma region RENDERING
 		glm::vec3 cameraPos = glm::vec3(view[3][0], view[3][1], view[3][2]);
 		{
 			mesh.bind(projection * view * model);
@@ -375,9 +301,10 @@ int main(int argc, const char** argv) {
 			shader.setUniformf3("cameraPos", cameraPos);
 			shader.setMatrix3("view", glm::mat3(view));
 			shader.setMatrix4("model", model);
-			GL_CALL(glDrawElements(GL_TRIANGLES, mesh.getIbo().getSize(), GL_UNSIGNED_INT, nullptr));
+			GL_CALL(glDrawElements(GL_TRIANGLES, pin.getIbo().getSize(), GL_UNSIGNED_INT, nullptr));
 
-		}
+		} 
+#pragma endregion
 
 		glfwSwapBuffers(window);
 	}

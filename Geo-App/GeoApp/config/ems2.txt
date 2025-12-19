@@ -1,0 +1,6 @@
+map ems3.obj
+image ems3.png
+xmin 751486
+xmax 754990
+ymin 188042
+ymax 190007
