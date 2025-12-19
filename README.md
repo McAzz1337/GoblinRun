@@ -16,7 +16,3 @@ This will add the pre-release of the WebRTC package to the project <br>
 # Inital setup
 https://developers.meta.com/horizon/documentation/unity/unity-project-setup <br>
 https://developers.meta.com/horizon/documentation/unity/unity-tutorial-hello-vr <br>  
-
-# Geo App
-Because of problems with merging the geo branch into main, due to git complaining about unrelated git history
-it is advised to clone the geo branch separately for the newest changes (these are minor changes).
