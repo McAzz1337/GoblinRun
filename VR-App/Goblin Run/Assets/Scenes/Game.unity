@@ -7407,7 +7407,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0ce25a53e4a64476c905d0fcebbdf90f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameStarter
-  spawner: {fileID: 0}
+  spawner: {fileID: 205024366}
   autoSpawnOnStart: 0
 --- !u!4 &1548437921
 Transform:
@@ -7437,7 +7437,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameDirector
   goblinSpawner: {fileID: 205024366}
-  weatherController: {fileID: 0}
+  weatherController: {fileID: 1083669176}
   screenBlocker: {fileID: 610756324}
   trapManager: {fileID: 1548437924}
 --- !u!114 &1548437923
@@ -7457,13 +7457,13 @@ MonoBehaviour:
   useHttpsProxy: 1
   proxyHost: wipro.lab.sabertooth.dev
   enemySpawner: {fileID: 205024366}
-  weatherController: {fileID: 0}
-  screenBlocker: {fileID: 0}
+  weatherController: {fileID: 1083669176}
+  screenBlocker: {fileID: 610756324}
   sendStatus: 1
   statusIntervalSeconds: 1
   activeGoblinsManual: 0
-  playerHealth: {fileID: 0}
-  director: {fileID: 0}
+  playerHealth: {fileID: 1887251191}
+  director: {fileID: 1548437922}
 --- !u!114 &1548437924
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -8204,7 +8204,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.5
+  m_Radius: 0.3
   m_Height: 4
   m_Direction: 1
   m_Center: {x: 0, y: 0, z: 0}
