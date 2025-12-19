@@ -53,15 +53,15 @@ MonoBehaviour:
   chaseSpeed: 1.4
   wanderSpeed: 0.5
   stopDistance: 0.8
-  groundHeightOffset: 0
+  groundHeightOffset: 0.5
   chaseRange: 3
   giveUpRange: 5
   wanderRadius: 2
   wanderDecisionTime: 2
-  attackHopHeight: 0.25
-  attackHopDuration: 0.2
-  hitKnockbackDistance: 0.3
-  hitKnockbackDuration: 0.1
+  attackHopHeight: 0.5
+  attackHopDuration: 1
+  hitKnockbackDistance: 0.9
+  hitKnockbackDuration: 1
 --- !u!135 &-1826273658305410296
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -209,7 +209,7 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: -8679921383154817045, guid: 00ee9154364e5474dbe944a6bb1ab275, type: 3}
       propertyPath: m_LocalPosition.x
-      value: 0.225895
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 00ee9154364e5474dbe944a6bb1ab275, type: 3}
       propertyPath: m_LocalPosition.y
@@ -217,7 +217,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 00ee9154364e5474dbe944a6bb1ab275, type: 3}
       propertyPath: m_LocalPosition.z
-      value: -0.620395
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: -8679921383154817045, guid: 00ee9154364e5474dbe944a6bb1ab275, type: 3}
       propertyPath: m_LocalRotation.w
